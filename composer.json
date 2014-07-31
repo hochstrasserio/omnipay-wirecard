@@ -1,5 +1,5 @@
 {
-    "name": "DDI-development/omnipay-wirecard",
+    "name": "hochstrasserio/omnipay-wirecard",
     "type": "library",
     "description": "Wirecard gateway for the Omnipay payment processing library",
     "keywords": [
