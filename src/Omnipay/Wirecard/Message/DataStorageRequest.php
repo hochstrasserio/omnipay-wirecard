@@ -68,6 +68,7 @@ class DataStorageRequest extends AbstractRequest
     	}
 			$storageId = $responseParams['success']['storageId'];
 			$this->setStorageId($storageId);
+            $this->setJavaScriptUrl($responseParams['success']['javascriptUrl']);
 			return true;
     }
     

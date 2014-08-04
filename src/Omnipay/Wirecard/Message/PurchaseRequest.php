@@ -20,14 +20,36 @@ class PurchaseRequest extends DataStorageRequest
         $data['failureUrl'] = $this->getFailureUrl();
         $data['cancelUrl'] = $this->getCancelUrl();
         $data['serviceUrl'] = $this->getServiceUrl();
-        $data['pendingUrl'] = $this->getPendingUrl();
         $data['confirmUrl'] = $this->getConfirmUrl();
-        $data['financialInstitution'] = $this->getFinancialInstitution();
-        $data['bankCountry'] = $this->getBankCountry();
-        $data['bankAccount'] = $this->getBankAccount();
-        $data['bankNumber'] = $this->getBankNumber();
-        $data['payerPayboxNumber'] = $this->getPayerPayboxNumber();
-        $data['username'] = $this->getUsername();
+
+        if ($this->getPendingUrl()) {
+            $data['pendingUrl'] = $this->getPendingUrl();
+        }
+
+        if ($this->getFinancialInstitution()) {
+            $data['financialInstitution'] = $this->getFinancialInstitution();
+        }
+
+        if ($this->getBankCountry()) {
+            $data['bankCountry'] = $this->getBankCountry();
+        }
+
+        if ($this->getBankAccount()) {
+            $data['bankAccount'] = $this->getBankAccount();
+        }
+
+        if ($this->getBankNumber()) {
+            $data['bankNumber'] = $this->getBankNumber();
+        }
+
+        if ($this->getPayerPayboxNumber()) {
+            $data['payerPayboxNumber'] = $this->getPayerPayboxNumber();
+        }
+
+        if ($this->getUsername()) {
+            $data['username'] = $this->getUsername();
+        }
+
         $data['consumerIpAddress'] = $this->getConsumerIpAddress();
         $data['consumerUserAgent'] = $this->getConsumerUserAgent();
         $data['requestFingerprintOrder'] = $this->getFingerprintOrder($data);

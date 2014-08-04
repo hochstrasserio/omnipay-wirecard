@@ -6,12 +6,14 @@ namespace Omnipay\Wirecard\Message;
  * Wirecard Abstract Request
  */
 use Guzzle\Common\Exception\ExceptionCollection;
+use Omnipay\Common\CreditCard;
 
 define('CCARD', 'CCARD');
 define('PBX', 'PBX');
 define('C2P', 'C2P');//doesn`t work
 define('ELV', 'ELV');
 define('GIROPAY', 'GIROPAY');
+define('PAYPAL', 'PAYPAL');
 
 abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 {
@@ -81,6 +83,26 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     public function setSuccessUrl($value)
     {
     	return $this->setParameter('successUrl', $value);
+    }
+
+    public function setReturnUrl($value)
+    {
+        return $this->setSuccessUrl($value);
+    }
+
+    public function getReturnUrl()
+    {
+        return $this->getSuccessUrl();
+    }
+
+    public function setCancelUrl($value)
+    {
+        return $this->setFailureUrl($value);
+    }
+
+    public function getCancelUrl()
+    {
+        return $this->getFailureUrl();
     }
     
     public function getServiceUrl()
@@ -152,6 +174,16 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     {
     	return $this->setParameter('storageId', $value);
     }
+
+    public function setJavaScriptUrl($url)
+    {
+        return $this->setParameter('javascriptUrl', $url);
+    }
+
+    public function getJavaScriptUrl()
+    {
+        return $this->getParameter('javascriptUrl');
+    }
     
     public function getPaymentType()
     {
@@ -161,6 +193,52 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     public function setPaymentType($value)
     {
     	return $this->setParameter('paymentType', $value);
+    }
+
+    public function setCard($value)
+    {
+        if ($value instanceof CreditCard) {
+            $card = $value;
+        } else {
+            $card = new CreditCard($value);
+        }
+
+        $this->setPan($card->getNumber());
+        $this->setCardHolderName($card->getBillingName());
+        $this->setExpirationMonth($card->getExpiryMonth());
+        $this->setExpirationYear($card->getExpiryYear());
+        $this->setCardVerifyCode($card->getCvv());
+
+        $this->setParameter('consumerEmail', $card->getEmail());
+
+        # Billing details
+        $this->setParameter('consumerBillingFirstName', $card->getBillingFirstName());
+        $this->setParameter('consumerBillingLastName', $card->getBillingLastName());
+        $this->setParameter('consumerBillingAddress1', $card->getBillingAddress1());
+        $this->setParameter('consumerBillingAddress2', $card->getBillingAddress2());
+        $this->setParameter('consumerBillingCity', $card->getBillingCity());
+        $this->setParameter('consumerBillingState', $card->getBillingState());
+        $this->setParameter('consumerBillingCountry', $card->getBillingCountry());
+        $this->setParameter('consumerBillingZipCode', $card->getBillingPostcode());
+        $this->setParameter('consumerBillingPhone', $card->getBillingPhone());
+
+        # Shipping details
+        $this->setParameter('consumerShippingFirstName', $card->getShippingFirstName());
+        $this->setParameter('consumerShippingLastName', $card->getShippingLastName());
+        $this->setParameter('consumerShippingAddress1', $card->getShippingAddress1());
+        $this->setParameter('consumerShippingAddress2', $card->getShippingAddress2());
+        $this->setParameter('consumerShippingCity', $card->getShippingCity());
+        $this->setParameter('consumerShippingState', $card->getShippingState());
+        $this->setParameter('consumerShippingCountry', $card->getShippingCountry());
+        $this->setParameter('consumerShippingZipCode', $card->getShippingPostcode());
+        $this->setParameter('consumerShippingPhone', $card->getShippingPhone());
+
+        return $this;
+    }
+
+    public function getCard()
+    {
+        return $this->getParameter('card');
     }
     
     public function getPan()
@@ -298,8 +376,9 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     	return 'POST';
     }
    
-    public function sendData($data)
+    public function send()
     {
+        $data = $this->getData();
         $httpResponse = $this->httpClient->createRequest($this->getHttpMethod(), $this->getEndpoint(), null, $data)->send()->getBody(true);   
         $responseParams = $this->convertResponseParams($httpResponse);
         
