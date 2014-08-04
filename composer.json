@@ -23,10 +23,7 @@
         "psr-0": { "Omnipay\\Wirecard\\" : "src/" }
     },
     "require": {
-        "omnipay/common": "~2.0"
-    },
-    "require-dev": {
-        "omnipay/tests": "~2.0"
+        "omnipay/omnipay": "~1.0"
     }
 }
 
