@@ -11,7 +11,6 @@ use Omnipay\Common\Message\RedirectResponseInterface;
  */
 class Response extends AbstractResponse implements RedirectResponseInterface
 {	
-	
     public function isSuccessful()
     {
         return !isset($this->data['error']) && !isset($this->data['success']['redirectUrl']);

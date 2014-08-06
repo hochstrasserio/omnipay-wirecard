@@ -8,7 +8,6 @@ namespace Omnipay\Wirecard\Message;
  */
 class DataStorageRequest extends AbstractRequest
 {
-	
 	protected $dataStorageEndpoint = 'https://checkout.wirecard.com/seamless/dataStorage';
 	
     public function getData()
@@ -38,6 +37,10 @@ class DataStorageRequest extends AbstractRequest
     
     public function createDataStorage()
     {
+        if ($this->getStorageId()) {
+            return;
+        }
+
     	try {
     		$this->initDataStorage();//throw exeption try catch
     		$this->saveSensitiveData();
@@ -71,6 +74,19 @@ class DataStorageRequest extends AbstractRequest
             $this->setJavaScriptUrl($responseParams['success']['javascriptUrl']);
 			return true;
     }
+
+    public function readSensitiveData()
+    {
+        $data = array();
+        $data['customerId'] = $this->getCustomerId();
+        $data['storageId'] = $this->getStorageId();
+        $data['shopId'] = $this->getShopId();
+        $data['requestFingerprint'] = $this->getDataStorageFingerprint();
+
+        $httpResponse = $this->httpClient->createRequest('POST', $this->getReadEndpoint(), null, $data)
+            ->send()
+            ->getBody(true);
+    }
     
     public function saveSensitiveData()
     {
@@ -92,6 +108,11 @@ class DataStorageRequest extends AbstractRequest
     public function getInitEndpoint()
     {
     	return $this->dataStorageEndpoint.'/init';
+    }
+
+    public function getReadEndpoint()
+    {
+        return $this->dataStorageEndpoint.'/read';
     }
     
     public function getSaveEndpoint()
