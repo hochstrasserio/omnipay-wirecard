@@ -384,6 +384,18 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         
         return $this->response = new Response($this,$responseParams);    	;
     }
+
+    public function getDataStorageReadFingerprint()
+    {
+        $parts = [
+            $this->getCustomerId(),
+            $this->getShopId() ?: '',
+            $this->getStorageId(),
+            $this->getSecret(),
+        ];
+
+        return hash('sha512', join('', $parts));
+    }
     
     public function getDataStorageFingerprint()
     {

@@ -81,11 +81,13 @@ class DataStorageRequest extends AbstractRequest
         $data['customerId'] = $this->getCustomerId();
         $data['storageId'] = $this->getStorageId();
         $data['shopId'] = $this->getShopId();
-        $data['requestFingerprint'] = $this->getDataStorageFingerprint();
+        $data['requestFingerprint'] = $this->getDataStorageReadFingerprint();
 
         $httpResponse = $this->httpClient->createRequest('POST', $this->getReadEndpoint(), null, $data)
             ->send()
             ->getBody(true);
+
+        return $this->convertResponseParams($httpResponse);
     }
     
     public function saveSensitiveData()
