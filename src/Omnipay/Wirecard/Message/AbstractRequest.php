@@ -18,7 +18,7 @@ define('PAYPAL', 'PAYPAL');
 abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 {
     protected $endpoint = 'https://checkout.wirecard.com/seamless/frontend/init';
-
+    const PCI3 = 'pci3';
 
     public function setEndpoint($value)
     {
@@ -381,6 +381,66 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     	return $this->setParameter('language', $value);
     }
 
+    public function getJavascriptScriptVersion()
+    {
+        return $this->getParameter('javascriptScriptVersion');
+    }
+
+    public function setJavascriptScriptVersion($value)
+    {
+        return $this->setParameter('javascriptScriptVersion', $value);
+    }
+
+    public function getIframeCssUrl()
+    {
+        return $this->getParameter('iframeCssUrl');
+    }
+
+    public function setIframeCssUrl($value)
+    {
+        return $this->setParameter('iframeCssUrl', (string) $value);
+    }
+
+    public function getCreditCardShowCvcField()
+    {
+        return $this->getParameter('creditcardShowCvcField');
+    }
+
+    public function setCreditCardShowCvcField($value)
+    {
+        return $this->setParameter('creditcardShowCvcField', (bool) $value);
+    }
+
+    public function getCreditCardShowIssueDateField()
+    {
+        return $this->getParameter('creditcardShowIssueDateField');
+    }
+
+    public function setCreditCardShowIssueDateField($value)
+    {
+        return $this->setParameter('creditcardShowIssueDateField', (bool) $value);
+    }
+
+    public function getCreditCardShowIssueNumberField()
+    {
+        return $this->getParameter('creditcardShowIssueNumberField');
+    }
+
+    public function setCreditCardShowIssueNumberField($value)
+    {
+        return $this->setParameter('creditcardShowIssueNumberField', (bool) $value);
+    }
+
+    public function getCreditCardShowCardholderNameField()
+    {
+        return $this->getParameter('creditcardShowCardholderNameField');
+    }
+
+    public function setCreditCardShowCardholderNameField($value)
+    {
+        return $this->setParameter('creditcardShowCardholderNameField', (bool) $value);
+    }
+
     public function getHttpMethod()
     {
     	return 'POST';
@@ -415,6 +475,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     	$requestFingerprintSeed .= $orderIdent = $this->getOrderIdent();
     	$requestFingerprintSeed .= $returnUrl = $this->getReturnUrl();
     	$requestFingerprintSeed .= $language = $this->getLanguage();
+        $requestFingerprintSeed .= $this->getJavascriptScriptVersion();
     	$requestFingerprintSeed .= $secret = $this->getSecret();
 
     	return hash("sha512", $requestFingerprintSeed);
