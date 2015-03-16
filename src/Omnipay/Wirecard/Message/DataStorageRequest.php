@@ -12,7 +12,7 @@ class DataStorageRequest extends AbstractRequest
 
 	public function getData()
     {
-    	$this->validate('customerId','paymentType','shopId');
+    	$this->validate('customerId','paymentType');
     	$paymentType = $this->getPaymentType();
 
     	if($paymentType == CCARD || $paymentType == ELV || $paymentType == PBX || $paymentType == C2P  || $paymentType == GIROPAY){
