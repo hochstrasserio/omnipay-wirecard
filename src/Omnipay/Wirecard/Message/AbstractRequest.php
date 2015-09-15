@@ -441,6 +441,51 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return $this->setParameter('creditcardShowCardholderNameField', (bool) $value);
     }
 
+    public function setBasketAmount($amount)
+    {
+        return $this->setParameter('basketAmount', $amount);
+    }
+
+    public function getBasketAmount($amount)
+    {
+        return $this->getParameter('basketAmount');
+    }
+
+    public function setBasketCurrency($currency)
+    {
+        return $this->setParameter('basketCurrency', $currency);
+    }
+
+    public function getBasketCurrency()
+    {
+        return $this->getParameter('basketCurrency');
+    }
+
+    public function setBasketItems($items)
+    {
+        return $this->setParameter('basketItems', (int) $items);
+    }
+
+    public function getBasketItems()
+    {
+        return $this->getParameter('basketItems') ?: 0;
+    }
+
+    public function addBasketItem($item)
+    {
+        $basketItems = $this->getBasketItems();
+        $basketItems += 1;
+        $this->setBasketItems($basketItems);
+
+        $this->setParameter('basketItem'.$basketItems.'ArticleNumber', $item['articleNumber']);
+        $this->setParameter('basketItem'.$basketItems.'Quantity', (int) $item['quantity']);
+        $this->setParameter('basketItem'.$basketItems.'UnitPrice', $item['unitPrice']);
+        $this->setParameter('basketItem'.$basketItems.'Tax', $item['tax']);
+        $this->setParameter('basketItem'.$basketItems.'Description', $item['description']);
+
+        return $this;
+    }
+
     public function getHttpMethod()
     {
     	return 'POST';
